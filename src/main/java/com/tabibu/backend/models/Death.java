@@ -1,8 +1,7 @@
 package com.tabibu.backend.models;
 
 import javax.persistence.*;
-import java.sql.Date;
-//import java.util.Date;
+import java.util.Date;
 
 @Entity
 public class Death {
