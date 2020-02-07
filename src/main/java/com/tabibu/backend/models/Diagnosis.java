@@ -27,4 +27,44 @@ public class Diagnosis {
 
     @Temporal(TemporalType.DATE)
     private Date diagnosisDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public HealthCareProvider getHealthCareProvider() {
+        return healthCareProvider;
+    }
+
+    public void setHealthCareProvider(HealthCareProvider healthCareProvider) {
+        this.healthCareProvider = healthCareProvider;
+    }
+
+    public List<Disease> getDiseases() {
+        return diseases;
+    }
+
+    public void setDiseases(List<Disease> diseases) {
+        this.diseases = diseases;
+    }
+
+    public int getPatientAge() {
+        return patientAge;
+    }
+
+    public void setPatientAge(int patientAge) {
+        this.patientAge = patientAge;
+    }
+
+    public Date getDiagnosisDate() {
+        return diagnosisDate;
+    }
+
+    public void setDiagnosisDate(Date diagnosisDate) {
+        this.diagnosisDate = diagnosisDate;
+    }
 }

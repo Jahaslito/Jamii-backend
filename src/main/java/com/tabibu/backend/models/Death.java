@@ -1,7 +1,8 @@
 package com.tabibu.backend.models;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+//import java.util.Date;
 
 @Entity
 public class Death {
@@ -23,4 +24,44 @@ public class Death {
 
     @Temporal(TemporalType.DATE)
     private Date deathDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getCorpseAge() {
+        return corpseAge;
+    }
+
+    public void setCorpseAge(int corpseAge) {
+        this.corpseAge = corpseAge;
+    }
+
+    public HealthCareProvider getHealthCareProvider() {
+        return healthCareProvider;
+    }
+
+    public void setHealthCareProvider(HealthCareProvider healthCareProvider) {
+        this.healthCareProvider = healthCareProvider;
+    }
+
+    public Disease getDisease() {
+        return disease;
+    }
+
+    public void setDisease(Disease disease) {
+        this.disease = disease;
+    }
+
+    public Date getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(Date deathDate) {
+        this.deathDate = deathDate;
+    }
 }
