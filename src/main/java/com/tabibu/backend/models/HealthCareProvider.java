@@ -29,4 +29,51 @@ public abstract class HealthCareProvider {
     @OneToMany(mappedBy = "healthCareProvider")
     private List<Death> deaths;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getPhone() {
+        return phone;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
+
+    public List<Diagnosis> getDiagnoses() {
+        return diagnoses;
+    }
+
+    public void setDiagnoses(List<Diagnosis> diagnoses) {
+        this.diagnoses = diagnoses;
+    }
+
+    public List<Death> getDeaths() {
+        return deaths;
+    }
+
+    public void setDeaths(List<Death> deaths) {
+        this.deaths = deaths;
+    }
 }
