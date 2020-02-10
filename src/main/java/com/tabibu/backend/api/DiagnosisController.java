@@ -1,9 +1,7 @@
 package com.tabibu.backend.api;
 
 import com.tabibu.backend.exceptions.ResourceNotFoundException;
-import com.tabibu.backend.models.Death;
 import com.tabibu.backend.models.Diagnosis;
-import com.tabibu.backend.repositories.DeathRepository;
 import com.tabibu.backend.repositories.DiagnosisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api/v1")
 public class DiagnosisController {
 
         private final DiagnosisRepository repository;

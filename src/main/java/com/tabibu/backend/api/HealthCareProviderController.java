@@ -36,7 +36,7 @@ public class HealthCareProviderController {
     /**
      * Gets providers by id.
      *
-     * @param providerId the user id
+     * @param providerId the provider id
      * @return the providers by id
      * @throws ResourceNotFoundException the resource not found exception
      */
@@ -46,7 +46,7 @@ public class HealthCareProviderController {
         HealthCareProvider provider =
                 repository
                         .findById(providerId)
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + providerId));
+                        .orElseThrow(() -> new ResourceNotFoundException("Provider not found on :: " + providerId));
         return ResponseEntity.ok().body(provider);
     }
 
@@ -54,43 +54,18 @@ public class HealthCareProviderController {
      * Create provider.
      *
      * @param provider the provider
-     * @return the user
+     * @return the provider
      */
     @PostMapping("/providers")
     public HealthCareProvider createProvider(@Valid @RequestBody HealthCareProvider provider) {
         return repository.save(provider);
     }
 
-    /**
-     * Update provider response entity.
-     *
-     * @param providerId the provider id
-     * @param providerDetails the provider details
-     * @return the response entity
-     * @throws ResourceNotFoundException the resource not found exception
-     */
-    @PutMapping("/providers/{id}")
-    public ResponseEntity<HealthCareProvider> updateProvider(
-            @PathVariable(value = "id") Long providerId, @Valid @RequestBody HealthCareProvider providerDetails)
-            throws ResourceNotFoundException {
-
-        HealthCareProvider provider =
-                repository
-                        .findById(providerId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Provider not found on :: " + providerId));
-
-        provider.setName(providerDetails.getName());
-        provider.setEmail(providerDetails.getEmail());
-        provider.setLocation(providerDetails.getLocation());
-        provider.setPhone(providerDetails.getPhone());
-        final HealthCareProvider updatedProvider = repository.save(providerDetails);
-        return ResponseEntity.ok(updatedProvider);
-    }
 
     /**
      * Delete provider map.
      *
-     * @param providerId the user id
+     * @param providerId the provider id
      * @return the map
      * @throws Exception the exception
      */

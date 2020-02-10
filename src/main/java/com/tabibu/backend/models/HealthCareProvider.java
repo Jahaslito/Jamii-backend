@@ -4,8 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class HealthCareProvider {
+public class HealthCareProvider {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
@@ -21,13 +20,17 @@ public abstract class HealthCareProvider {
     private String email;
 
     @Column(nullable = false)
-    private int phone;
+    private String phone;
 
     @OneToMany(mappedBy = "healthCareProvider")
     private List<Diagnosis> diagnoses;
 
     @OneToMany(mappedBy = "healthCareProvider")
     private List<Death> deaths;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -53,11 +56,11 @@ public abstract class HealthCareProvider {
         this.email = email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
