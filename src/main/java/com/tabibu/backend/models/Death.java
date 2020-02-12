@@ -6,7 +6,7 @@ import java.util.Date;
 @Entity
 public class Death {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     protected Long id;
 
@@ -62,5 +62,15 @@ public class Death {
 
     public void setDeathDate(Date deathDate) {
         this.deathDate = deathDate;
+    }
+
+    public DeathDTO convertToDTO() {
+        DeathDTO deathDTO = new DeathDTO();
+        deathDTO.setId(this.id);
+        deathDTO.setHealthCareProviderId(this.getHealthCareProvider().getId());
+        deathDTO.setCorpseAge(corpseAge);
+        deathDTO.setDiseaseId(this.getDisease().getId());
+        deathDTO.setDeathDate(this.deathDate.toString());
+        return deathDTO;
     }
 }

@@ -6,9 +6,9 @@ import java.util.List;
 @Entity
 public class HealthCareProvider {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
-    protected Long id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -78,5 +78,15 @@ public class HealthCareProvider {
 
     public void setDeaths(List<Death> deaths) {
         this.deaths = deaths;
+    }
+
+    public HealthCareProviderDTO convertToDTO() {
+        HealthCareProviderDTO healthCareProviderDTO = new HealthCareProviderDTO();
+        healthCareProviderDTO.setId(this.id);
+        healthCareProviderDTO.setName(this.name);
+        healthCareProviderDTO.setEmail(this.email);
+        healthCareProviderDTO.setPhone(this.phone);
+        healthCareProviderDTO.setLocation(this.location);
+        return healthCareProviderDTO;
     }
 }

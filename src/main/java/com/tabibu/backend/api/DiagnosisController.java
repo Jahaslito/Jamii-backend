@@ -2,82 +2,93 @@ package com.tabibu.backend.api;
 
 import com.tabibu.backend.exceptions.ResourceNotFoundException;
 import com.tabibu.backend.models.Diagnosis;
+import com.tabibu.backend.models.DiagnosisDTO;
+import com.tabibu.backend.models.Disease;
 import com.tabibu.backend.repositories.DiagnosisRepository;
+import com.tabibu.backend.repositories.DiseaseRepository;
+import com.tabibu.backend.repositories.HealthCareProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
 public class DiagnosisController {
 
-        private final DiagnosisRepository repository;
+        private final DiagnosisRepository diagnosisRepository;
+        private final HealthCareProviderRepository healthCareProviderRepository;
+        private final DiseaseRepository diseaseRepository;
 
         @Autowired
-        public DiagnosisController(DiagnosisRepository repository) {
-            this.repository = repository;
+        public DiagnosisController(DiagnosisRepository diagnosisRepository,
+                                   HealthCareProviderRepository healthCareProviderRepository,
+                                   DiseaseRepository diseaseRepository) {
+            this.diagnosisRepository = diagnosisRepository;
+            this.healthCareProviderRepository = healthCareProviderRepository;
+            this.diseaseRepository = diseaseRepository;
         }
 
 
         @GetMapping("/diagnosis")
-        public List<Diagnosis> getAllDiagnosis() {
-            return repository.findAll();
+        public List<DiagnosisDTO> getAllDiagnosis() {
+            return diagnosisRepository.findAll().stream().map(Diagnosis::convertToDTO).collect(Collectors.toList());
         }
 
 
         @GetMapping("/diagnosis/{id}")
-        public ResponseEntity<Diagnosis> getDiagnosisById(@PathVariable(value = "id") Long Id)
+        public ResponseEntity<DiagnosisDTO> getDiagnosisById(@PathVariable(value = "id") Long Id)
                 throws ResourceNotFoundException {
-            Diagnosis provider =
-                    repository
+            Diagnosis diagnosis =
+                    diagnosisRepository
                             .findById(Id)
-                            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + Id));
-            return ResponseEntity.ok().body(provider);
+                            .orElseThrow(() -> new ResourceNotFoundException("Diagnosis not found on :: " + Id));
+            return ResponseEntity.ok().body(diagnosis.convertToDTO());
         }
-
 
         @PostMapping("/diagnosis")
-        public Diagnosis createDiagnosis(@Valid @RequestBody Diagnosis diagnosis) {
-            return repository.save(diagnosis);
+        public DiagnosisDTO createDiagnosis(@Valid @RequestBody DiagnosisDTO diagnosisDTO) throws ResourceNotFoundException, ParseException {
+            Diagnosis diagnosis = this.convertToEntity(diagnosisDTO);
+            diagnosisRepository.save(diagnosis);
+            return diagnosis.convertToDTO();
         }
-
-        Diagnosis diagnosisDetails;
-        @PutMapping("/diagnosis/{id}")
-        public ResponseEntity<Diagnosis> updateDiagnosis(
-                @PathVariable(value = "id") Long Id, @Valid @RequestBody Diagnosis providerDetails)
-                throws ResourceNotFoundException {
-
-            Diagnosis diagnosis =
-                    repository
-                            .findById(Id)
-                            .orElseThrow(() -> new ResourceNotFoundException("Provider not found on :: " + Id));
-
-            diagnosis.setId( diagnosisDetails.getId());
-            diagnosis.setDiagnosisDate(diagnosisDetails.getDiagnosisDate());
-            diagnosis.setDiseases(diagnosisDetails.getDiseases());
-            diagnosis.setPatientAge(diagnosisDetails.getPatientAge());
-            diagnosis.setHealthCareProvider(diagnosisDetails.getHealthCareProvider());
-            final Diagnosis updatedDiagnosis = repository.save(providerDetails);
-            return ResponseEntity.ok(updatedDiagnosis);
-        }
-
 
         @DeleteMapping("/diagnosis/{id}")
         public Map<String, Boolean> deleteDiagnosis(@PathVariable(value = "id") Long Id) throws Exception {
             Diagnosis diagnosis =
-                    repository
+                    diagnosisRepository
                             .findById(Id)
                             .orElseThrow(() -> new ResourceNotFoundException("Provider not found on :: " + Id));
 
-            repository.delete(diagnosis);
+            diagnosisRepository.delete(diagnosis);
             Map<String, Boolean> response = new HashMap<>();
             response.put("deleted", Boolean.TRUE);
             return response;
         }
 
+        private Diagnosis convertToEntity(DiagnosisDTO diagnosisDTO) throws ParseException, ResourceNotFoundException {
+            Diagnosis diagnosis = new Diagnosis();
+            diagnosis.setHealthCareProvider(healthCareProviderRepository
+                    .findById(diagnosisDTO.getHealthCareProviderId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Provider not found on :: " + diagnosisDTO.getHealthCareProviderId())));
+            diagnosis.setPatientAge(diagnosisDTO.getPatientAge());
+            diagnosis.setDiagnosisDate(new SimpleDateFormat("dd-MM-yyyy").parse(diagnosisDTO.getDiagnosisDate()));
+
+            List<Disease> diseases = new ArrayList<>();
+            for (Long diseaseId : diagnosisDTO.getDiseases()) {
+                Disease disease = diseaseRepository.findById(diseaseId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Disease not found on id: " + diseaseId));
+                diseases.add(disease);
+            }
+            diagnosis.setDiseases(diseases);
+            return diagnosis;
+        }
     }

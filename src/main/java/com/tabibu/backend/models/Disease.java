@@ -6,7 +6,7 @@ import java.util.List;
 @Entity
 public class Disease {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     protected Long id;
 
@@ -16,11 +16,11 @@ public class Disease {
     @Column()
     private String description;
 
-    @ManyToMany(mappedBy = "diseases")
-    private List<Diagnosis> diagnoses;
-
     @OneToMany(mappedBy = "disease")
     private List<Death> deaths;
+
+    @ManyToMany(mappedBy = "diseases", fetch = FetchType.LAZY)
+    private List<Diagnosis> diagnoses;
 
     public Long getId() {
         return id;
@@ -46,19 +46,19 @@ public class Disease {
         this.description = description;
     }
 
-    public List<Diagnosis> getDiagnoses() {
-        return diagnoses;
-    }
-
-    public void setDiagnoses(List<Diagnosis> diagnoses) {
-        this.diagnoses = diagnoses;
-    }
-
     public List<Death> getDeaths() {
         return deaths;
     }
 
     public void setDeaths(List<Death> deaths) {
         this.deaths = deaths;
+    }
+
+    public DiseaseDTO convertToDTO() {
+        DiseaseDTO diseaseDTO = new DiseaseDTO();
+        diseaseDTO.setId(this.id);
+        diseaseDTO.setName(this.name);
+        diseaseDTO.setDescription(this.description);
+        return diseaseDTO;
     }
 }
