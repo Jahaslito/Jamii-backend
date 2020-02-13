@@ -6,7 +6,6 @@ import com.tabibu.backend.models.DeathDTO;
 import com.tabibu.backend.repositories.DeathRepository;
 import com.tabibu.backend.repositories.DiseaseRepository;
 import com.tabibu.backend.repositories.HealthCareProviderRepository;
-import net.kaczmarzyk.spring.data.jpa.domain.DateAfterInclusive;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.GreaterThanOrEqual;
 import net.kaczmarzyk.spring.data.jpa.domain.LessThanOrEqual;
