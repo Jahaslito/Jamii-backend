@@ -7,9 +7,9 @@ public class DeathDTO {
 
     private int corpseAge;
 
-    private long healthCareProviderId;
+    private HealthCareProviderDTO healthCareProvider;
 
-    private long diseaseId;
+    private DiseaseDTO disease;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private String deathDate;
@@ -30,20 +30,20 @@ public class DeathDTO {
         this.corpseAge = corpseAge;
     }
 
-    public long getHealthCareProviderId() {
-        return healthCareProviderId;
+    public HealthCareProviderDTO getHealthCareProvider() {
+        return healthCareProvider;
     }
 
-    public void setHealthCareProviderId(long healthCareProviderId) {
-        this.healthCareProviderId = healthCareProviderId;
+    public void setHealthCareProvider(HealthCareProviderDTO healthCareProvider) {
+        this.healthCareProvider = healthCareProvider;
     }
 
-    public long getDiseaseId() {
-        return diseaseId;
+    public DiseaseDTO getDisease() {
+        return disease;
     }
 
-    public void setDiseaseId(long diseaseId) {
-        this.diseaseId = diseaseId;
+    public void setDisease(DiseaseDTO disease) {
+        this.disease = disease;
     }
 
     public String getDeathDate() {

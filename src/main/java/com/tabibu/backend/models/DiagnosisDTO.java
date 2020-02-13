@@ -7,14 +7,14 @@ import java.util.List;
 public class DiagnosisDTO {
     private Long id;
 
-    private Long healthCareProviderId;
+    private HealthCareProviderDTO healthCareProvider;
 
     private int patientAge;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private String diagnosisDate;
 
-    private List<Long> diseases;
+    private List<DiseaseDTO> diseases;
 
     public Long getId() {
         return id;
@@ -24,12 +24,12 @@ public class DiagnosisDTO {
         this.id = id;
     }
 
-    public Long getHealthCareProviderId() {
-        return healthCareProviderId;
+    public HealthCareProviderDTO getHealthCareProvider() {
+        return healthCareProvider;
     }
 
-    public void setHealthCareProviderId(Long healthCareProviderId) {
-        this.healthCareProviderId = healthCareProviderId;
+    public void setHealthCareProvider(HealthCareProviderDTO healthCareProvider) {
+        this.healthCareProvider = healthCareProvider;
     }
 
     public int getPatientAge() {
@@ -48,11 +48,11 @@ public class DiagnosisDTO {
         this.diagnosisDate = diagnosisDate;
     }
 
-    public List<Long> getDiseases() {
+    public List<DiseaseDTO> getDiseases() {
         return diseases;
     }
 
-    public void setDiseases(List<Long> diseases) {
+    public void setDiseases(List<DiseaseDTO> diseases) {
         this.diseases = diseases;
     }
 }

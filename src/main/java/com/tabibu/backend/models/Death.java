@@ -67,9 +67,9 @@ public class Death {
     public DeathDTO convertToDTO() {
         DeathDTO deathDTO = new DeathDTO();
         deathDTO.setId(this.id);
-        deathDTO.setHealthCareProviderId(this.getHealthCareProvider().getId());
+        deathDTO.setHealthCareProvider(this.getHealthCareProvider().convertToDTO());
         deathDTO.setCorpseAge(corpseAge);
-        deathDTO.setDiseaseId(this.getDisease().getId());
+        deathDTO.setDisease(this.getDisease().convertToDTO());
         deathDTO.setDeathDate(this.deathDate.toString());
         return deathDTO;
     }

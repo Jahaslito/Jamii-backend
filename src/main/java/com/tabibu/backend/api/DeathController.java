@@ -6,7 +6,10 @@ import com.tabibu.backend.models.DeathDTO;
 import com.tabibu.backend.repositories.DeathRepository;
 import com.tabibu.backend.repositories.DiseaseRepository;
 import com.tabibu.backend.repositories.HealthCareProviderRepository;
+import net.kaczmarzyk.spring.data.jpa.domain.DateAfterInclusive;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
+import net.kaczmarzyk.spring.data.jpa.domain.GreaterThanOrEqual;
+import net.kaczmarzyk.spring.data.jpa.domain.LessThanOrEqual;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +27,11 @@ import java.util.stream.Collectors;
 
 @And({
         @Spec(path = "healthCareProvider.id", params = "healthCareProviderId", spec = Equal.class),
+        @Spec(path = "disease.id", params = "diseaseId", spec = Equal.class),
+        @Spec(path = "deathDate", params = "dateFrom", spec = GreaterThanOrEqual.class),
+        @Spec(path = "deathDate", params = "dateTo", spec = LessThanOrEqual.class)
 })
-interface DeathSpec extends Specification<Death> {
-}
+interface DeathSpec extends Specification<Death> { }
 
 @RestController
 @RequestMapping("/api/v1")
@@ -84,13 +89,13 @@ public class DeathController {
 
     private Death convertToEntity(DeathDTO deathDTO) throws ResourceNotFoundException, ParseException {
         Death death = new Death();
-        death.setHealthCareProvider(healthCareProviderRepository.findById(deathDTO.getHealthCareProviderId())
+        death.setHealthCareProvider(healthCareProviderRepository.findById(deathDTO.getHealthCareProvider().getId())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Could not find provider at id: " + deathDTO.getHealthCareProviderId())));
+                        new ResourceNotFoundException("Could not find provider at id: " + deathDTO.getHealthCareProvider())));
         death.setCorpseAge(deathDTO.getCorpseAge());
-        death.setDisease(diseaseRepository.findById(deathDTO.getDiseaseId())
+        death.setDisease(diseaseRepository.findById(deathDTO.getDisease().getId())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Could not find disease at id: " + deathDTO.getDiseaseId())));
+                        new ResourceNotFoundException("Could not find disease at id: " + deathDTO.getDisease())));
         death.setDeathDate(new SimpleDateFormat("dd-MM-yyyy").parse(deathDTO.getDeathDate()));
         return death;
     }

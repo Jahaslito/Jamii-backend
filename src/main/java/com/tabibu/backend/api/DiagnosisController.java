@@ -1,13 +1,15 @@
 package com.tabibu.backend.api;
 
 import com.tabibu.backend.exceptions.ResourceNotFoundException;
-import com.tabibu.backend.models.Diagnosis;
-import com.tabibu.backend.models.DiagnosisDTO;
-import com.tabibu.backend.models.Disease;
+import com.tabibu.backend.models.*;
 import com.tabibu.backend.repositories.DiagnosisRepository;
 import com.tabibu.backend.repositories.DiseaseRepository;
 import com.tabibu.backend.repositories.HealthCareProviderRepository;
+import net.kaczmarzyk.spring.data.jpa.domain.Equal;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+
+@And({
+        @Spec(path = "healthCareProvider.id", params = "healthCareProviderId", spec = Equal.class),
+})
+interface DiagnosisSpec extends Specification<Diagnosis> {
+}
 
 @RestController
 @RequestMapping("/api/v1")
@@ -39,8 +48,8 @@ public class DiagnosisController {
 
 
         @GetMapping("/diagnosis")
-        public List<DiagnosisDTO> getAllDiagnosis() {
-            return diagnosisRepository.findAll().stream().map(Diagnosis::convertToDTO).collect(Collectors.toList());
+        public List<DiagnosisDTO> getAllDiagnosis(DiagnosisSpec diagnosisSpec) {
+            return diagnosisRepository.findAll(diagnosisSpec).stream().map(Diagnosis::convertToDTO).collect(Collectors.toList());
         }
 
 
@@ -77,15 +86,15 @@ public class DiagnosisController {
         private Diagnosis convertToEntity(DiagnosisDTO diagnosisDTO) throws ParseException, ResourceNotFoundException {
             Diagnosis diagnosis = new Diagnosis();
             diagnosis.setHealthCareProvider(healthCareProviderRepository
-                    .findById(diagnosisDTO.getHealthCareProviderId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Provider not found on :: " + diagnosisDTO.getHealthCareProviderId())));
+                    .findById(diagnosisDTO.getHealthCareProvider().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Provider not found on :: " + diagnosisDTO.getHealthCareProvider())));
             diagnosis.setPatientAge(diagnosisDTO.getPatientAge());
             diagnosis.setDiagnosisDate(new SimpleDateFormat("dd-MM-yyyy").parse(diagnosisDTO.getDiagnosisDate()));
 
             List<Disease> diseases = new ArrayList<>();
-            for (Long diseaseId : diagnosisDTO.getDiseases()) {
-                Disease disease = diseaseRepository.findById(diseaseId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Disease not found on id: " + diseaseId));
+            for (DiseaseDTO diseaseDTO : diagnosisDTO.getDiseases()) {
+                Disease disease = diseaseRepository.findById(diagnosisDTO.getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Disease not found on id: " + diagnosisDTO.getId()));
                 diseases.add(disease);
             }
             diagnosis.setDiseases(diseases);

@@ -1,7 +1,5 @@
 package com.tabibu.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -78,10 +76,14 @@ public class Diagnosis {
     public DiagnosisDTO convertToDTO() {
         DiagnosisDTO diagnosisDTO = new DiagnosisDTO();
         diagnosisDTO.setId(this.id);
-        diagnosisDTO.setHealthCareProviderId(this.healthCareProvider.getId());
+        diagnosisDTO.setHealthCareProvider(this.healthCareProvider.convertToDTO());
         diagnosisDTO.setPatientAge(this.patientAge);
         diagnosisDTO.setDiagnosisDate(this.diagnosisDate.toString());
-        diagnosisDTO.setDiseases(this.getDiseases().stream().map(Disease::getId).collect(Collectors.toList()));
+        diagnosisDTO.setDiseases(this.getDiseases().stream()
+                .map(disease -> new DiseaseDTO(disease.getId(),
+                        disease.getName(),
+                        disease.getDescription()))
+                .collect(Collectors.toList()));
         return diagnosisDTO;
     }
 }
