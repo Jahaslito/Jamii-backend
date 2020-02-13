@@ -6,7 +6,11 @@ import com.tabibu.backend.repositories.DiagnosisRepository;
 import com.tabibu.backend.repositories.DiseaseRepository;
 import com.tabibu.backend.repositories.HealthCareProviderRepository;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
+import net.kaczmarzyk.spring.data.jpa.domain.GreaterThanOrEqual;
+import net.kaczmarzyk.spring.data.jpa.domain.LessThanOrEqual;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Join;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Joins;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,9 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+@Joins({
+        @Join(path= "diseases", alias = "disease")
+})
 @And({
+        @Spec(path="disease.id", params="diseaseId", spec = Equal.class),
         @Spec(path = "healthCareProvider.id", params = "healthCareProviderId", spec = Equal.class),
+        @Spec(path = "diagnosisDate", params = "dateFrom", spec = GreaterThanOrEqual.class),
+        @Spec(path = "diagnosisDate", params = "dateTo", spec = LessThanOrEqual.class)
 })
 interface DiagnosisSpec extends Specification<Diagnosis> {
 }

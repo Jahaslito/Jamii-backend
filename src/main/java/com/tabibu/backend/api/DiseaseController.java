@@ -1,14 +1,11 @@
 package com.tabibu.backend.api;
 
 import com.tabibu.backend.exceptions.ResourceNotFoundException;
-import com.tabibu.backend.models.Death;
-import com.tabibu.backend.models.Diagnosis;
 import com.tabibu.backend.models.Disease;
 import com.tabibu.backend.models.DiseaseDTO;
 import com.tabibu.backend.repositories.DiseaseRepository;
-import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
-import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Or;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,17 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@And({
-        @Spec(path = "name", spec = Like.class),
-        @Spec(path = "description", spec = Like.class)
+@Or({
+        @Spec(path = "name", params="name", spec = Like.class),
+        @Spec(path = "description", params="name", spec = Like.class)
 })
 interface DiseaseSpec extends Specification<Disease> {
 }
