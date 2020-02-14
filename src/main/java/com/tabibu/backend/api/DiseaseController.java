@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Or({
-        @Spec(path = "name", params="name", spec = Like.class),
-        @Spec(path = "description", params="name", spec = Like.class)
+        @Spec(path = "name", params = "name", spec = Like.class),
+        @Spec(path = "description", params = "name", spec = Like.class)
 })
 interface DiseaseSpec extends Specification<Disease> {
 }
