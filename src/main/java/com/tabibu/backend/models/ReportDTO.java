@@ -3,15 +3,15 @@ package com.tabibu.backend.models;
 import java.util.List;
 
 public class ReportDTO {
-    private String disease;
+    private DiseaseDTO disease;
     private int year;
     private List<MonthCasesDTO> cases;
 
-    public String getDisease() {
+    public DiseaseDTO getDisease() {
         return disease;
     }
 
-    public void setDisease(String disease) {
+    public void setDisease(DiseaseDTO disease) {
         this.disease = disease;
     }
 

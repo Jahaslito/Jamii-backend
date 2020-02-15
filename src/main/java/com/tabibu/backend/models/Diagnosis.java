@@ -80,10 +80,13 @@ public class Diagnosis {
         diagnosisDTO.setPatientAge(this.patientAge);
         diagnosisDTO.setDiagnosisDate(this.diagnosisDate.toString());
         diagnosisDTO.setDiseases(this.getDiseases().stream()
-                .map(disease -> new DiseaseDTO(disease.getId(),
-                        disease.getName(),
-                        disease.getDescription()))
-                .collect(Collectors.toList()));
+                .map(disease -> {
+                    DiseaseDTO diseaseDTO = new DiseaseDTO();
+                    diseaseDTO.setId(disease.getId());
+                    diseaseDTO.setName(disease.getName());
+                    diseaseDTO.setDescription(disease.getDescription());
+                   return diseaseDTO;
+                }).collect(Collectors.toList()));
         return diagnosisDTO;
     }
 }

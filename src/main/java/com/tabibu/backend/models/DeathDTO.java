@@ -11,7 +11,7 @@ public class DeathDTO {
 
     private DiseaseDTO disease;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String deathDate;
 
     public Long getId() {

@@ -1,19 +1,14 @@
 package com.tabibu.backend.api;
 
 import com.tabibu.backend.exceptions.ResourceNotFoundException;
-import com.tabibu.backend.models.*;
+import com.tabibu.backend.models.Diagnosis;
+import com.tabibu.backend.models.DiagnosisDTO;
+import com.tabibu.backend.models.Disease;
+import com.tabibu.backend.models.DiseaseDTO;
 import com.tabibu.backend.repositories.DiagnosisRepository;
 import com.tabibu.backend.repositories.DiseaseRepository;
 import com.tabibu.backend.repositories.HealthCareProviderRepository;
-import net.kaczmarzyk.spring.data.jpa.domain.Equal;
-import net.kaczmarzyk.spring.data.jpa.domain.GreaterThanOrEqual;
-import net.kaczmarzyk.spring.data.jpa.domain.LessThanOrEqual;
-import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
-import net.kaczmarzyk.spring.data.jpa.web.annotation.Join;
-import net.kaczmarzyk.spring.data.jpa.web.annotation.Joins;
-import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,18 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-@Joins({
-        @Join(path= "diseases", alias = "disease")
-})
-@And({
-        @Spec(path="disease.id", params="diseaseId", spec = Equal.class),
-        @Spec(path = "healthCareProvider.id", params = "healthCareProviderId", spec = Equal.class),
-        @Spec(path = "diagnosisDate", params = "dateFrom", spec = GreaterThanOrEqual.class),
-        @Spec(path = "diagnosisDate", params = "dateTo", spec = LessThanOrEqual.class)
-})
-interface DiagnosisSpec extends Specification<Diagnosis> {
-}
 
 @RestController
 @RequestMapping("/api/v1")
@@ -72,6 +55,7 @@ public class DiagnosisController {
             return ResponseEntity.ok().body(diagnosis.convertToDTO());
         }
 
+        // TODO: DiagnosisDTO list of diseases should take Ids and not DiseaseDTOs
         @PostMapping("/diagnosis")
         public DiagnosisDTO createDiagnosis(@Valid @RequestBody DiagnosisDTO diagnosisDTO) throws ResourceNotFoundException, ParseException {
             Diagnosis diagnosis = this.convertToEntity(diagnosisDTO);
@@ -98,7 +82,7 @@ public class DiagnosisController {
                     .findById(diagnosisDTO.getHealthCareProvider().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Provider not found on :: " + diagnosisDTO.getHealthCareProvider())));
             diagnosis.setPatientAge(diagnosisDTO.getPatientAge());
-            diagnosis.setDiagnosisDate(new SimpleDateFormat("dd-MM-yyyy").parse(diagnosisDTO.getDiagnosisDate()));
+            diagnosis.setDiagnosisDate(new SimpleDateFormat("yyyy-MM-dd").parse(diagnosisDTO.getDiagnosisDate()));
 
             List<Disease> diseases = new ArrayList<>();
             for (DiseaseDTO diseaseDTO : diagnosisDTO.getDiseases()) {

@@ -11,7 +11,7 @@ public class DiagnosisDTO {
 
     private int patientAge;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String diagnosisDate;
 
     private List<DiseaseDTO> diseases;
