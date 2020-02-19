@@ -1,10 +1,8 @@
 package com.tabibu.backend.api;
 
 import com.tabibu.backend.exceptions.ResourceNotFoundException;
-import com.tabibu.backend.models.Diagnosis;
-import com.tabibu.backend.models.Disease;
-import com.tabibu.backend.models.MonthCasesDTO;
-import com.tabibu.backend.models.ReportDTO;
+import com.tabibu.backend.models.*;
+import com.tabibu.backend.repositories.DeathRepository;
 import com.tabibu.backend.repositories.DiagnosisRepository;
 import com.tabibu.backend.repositories.DiseaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +25,15 @@ import java.util.List;
 public class ReportsController {
     private final DiseaseRepository diseaseRepository;
     private final DiagnosisRepository diagnosisRepository;
+    private final DeathRepository deathRepository;
 
     @Autowired
-    public ReportsController(DiseaseRepository diseaseRepository, DiagnosisRepository diagnosisRepository) {
+    public ReportsController(DiseaseRepository diseaseRepository,
+                             DiagnosisRepository diagnosisRepository,
+                             DeathRepository deathRepository) {
         this.diseaseRepository = diseaseRepository;
         this.diagnosisRepository = diagnosisRepository;
+        this.deathRepository = deathRepository;
     }
 
     @GetMapping("/reports")
@@ -43,10 +45,12 @@ public class ReportsController {
         Date dateTo = new SimpleDateFormat("yyyy-MM-dd").parse(year + "-12-31");
 
         List<Diagnosis> diagnoses = diagnosisRepository.findAllByDiagnosisDateBetweenAndDiseasesContains(dateFrom, dateTo, disease);
+        List<Death> deaths = deathRepository.getDeathsByDiseaseAndDeathDateBetween(disease, dateFrom, dateTo);
 
         ReportDTO reportDTO = new ReportDTO();
         reportDTO.setYear(year);
         reportDTO.setDisease(disease.convertToDTO());
+        reportDTO.setTotalReportedDeaths(deaths.size());
 
         List<MonthCasesDTO> monthCases = new ArrayList<>();
         for(int i = 1; i <= 12; i++){

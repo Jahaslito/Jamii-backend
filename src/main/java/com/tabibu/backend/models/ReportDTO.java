@@ -5,6 +5,7 @@ import java.util.List;
 public class ReportDTO {
     private DiseaseDTO disease;
     private int year;
+    private int totalReportedDeaths;
     private List<MonthCasesDTO> cases;
 
     public DiseaseDTO getDisease() {
@@ -29,5 +30,13 @@ public class ReportDTO {
 
     public void setCases(List<MonthCasesDTO> cases) {
         this.cases = cases;
+    }
+
+    public int getTotalReportedDeaths() {
+        return totalReportedDeaths;
+    }
+
+    public void setTotalReportedDeaths(int totalReportedDeaths) {
+        this.totalReportedDeaths = totalReportedDeaths;
     }
 }
